@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import requests
+import argparse
 
 def run_query(query, variables, api_key):
 
@@ -20,52 +21,30 @@ def run_query(query, variables, api_key):
         raise Exception('Query failed\n\treturn code: {}\n\tmessage: {}\n'.format(request.status_code, request.text))
 
 if __name__ == "__main__":
-    query = """
-   {
-  EVM(network: eth) {
-    Blocks(limit: { count: 10 }) {
-      Block {
-        Number
-        Time
-      }
-    }
-  }
-}
-    """
-    query2 = """
-{
-  Solana {
-    TokenSupplyUpdates(
-      limit:{count:1}
-      orderBy:{descending:Block_Time}
-      where: {TokenSupplyUpdate: {Currency: {MintAddress: {is: "6D7NaB2xsLd7cauWu1wKk6KBsJohJmP2qZH9GEfVi5Ui"}}}}
-    ) {
-      TokenSupplyUpdate {
-        Amount
-        Currency {
-          MintAddress
-          Name
-        }
-        PreBalance
-        PostBalance
-      }
-    }
-  }
-}
-    """
+    ### Parse our args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-k', '--api_key', required=True,
+                        type=str, help='File that contains our API key.')
+    parser.add_argument('-q', '--query', required=True,
+                        type=str, help='File that contains our query')
+    args = parser.parse_args()
+    api_key_file = args.api_key
+    query_file = args.query
 
-    ### Not used?
-    # variables = {
-    #     "network": "solana",
-    #     "xxx": "xxx"
-    # }
+    
+    ### We'll probably need variables later.
     variables = {}
 
     ### Grab our API key.
     api_key = ''
-    with open('API.key', 'r') as file:
+    with open(api_key_file, 'r') as file:
         api_key = file.read().strip()
 
-    output = run_query(query2, variables, api_key)
+    ### Grab our query.
+    query = ''
+    with open(query_file, 'r') as file:
+        query = file.read().strip()
+
+    output = run_query(query, variables, api_key)
 
     print(output)
