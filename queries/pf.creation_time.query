@@ -1,0 +1,20 @@
+{
+  Solana(network: solana) {
+    Instructions(
+      where: {Instruction: {Accounts: {includes: {Address: {is: $ADDRESS}}}, Program: {Name: {is: "pump"}, Method: {is: "create"}}}}
+    ) {
+      Block{
+        Time
+      }
+      Transaction {
+        Signer
+        Signature
+      }
+      Instruction {
+        Accounts {
+          Address
+        }
+      }
+    }
+  }
+}
