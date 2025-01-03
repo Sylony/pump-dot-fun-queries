@@ -1,3 +1,14 @@
+# Ignore secrets
+API.key
+
+# Ignore Emacs backup files
+*~
+\#*\#
+.#*
+
+# Ignore compiled Emacs Lisp files
+*.elc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
