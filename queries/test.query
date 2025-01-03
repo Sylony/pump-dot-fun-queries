@@ -1,0 +1,19 @@
+{
+  Solana {
+    TokenSupplyUpdates(
+      limit:{count:1}
+      orderBy:{descending:Block_Time}
+      where: {TokenSupplyUpdate: {Currency: {MintAddress: {is: "6D7NaB2xsLd7cauWu1wKk6KBsJohJmP2qZH9GEfVi5Ui"}}}}
+    ) {
+      TokenSupplyUpdate {
+        Amount
+        Currency {
+          MintAddress
+          Name
+        }
+        PreBalance
+        PostBalance
+      }
+    }
+  }
+}
