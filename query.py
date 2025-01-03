@@ -2,6 +2,7 @@
 
 import requests
 import argparse
+import json
 
 def run_query(query, variables, api_key):
 
@@ -16,7 +17,7 @@ def run_query(query, variables, api_key):
                             headers=headers)
     
     if request.status_code == 200:
-        return request.json()
+        return request.text
     else:
         raise Exception('Query failed\n\treturn code: {}\n\tmessage: {}\n'.format(request.status_code, request.text))
 
@@ -45,6 +46,21 @@ if __name__ == "__main__":
     with open(query_file, 'r') as file:
         query = file.read().strip()
 
+    ### Run our query
     output = run_query(query, variables, api_key)
+    data = json.loads(output)
 
-    print(output)
+    query2 = ''
+    with open('queries/pf.creation_time.query', 'r') as file:
+        query2 = file.read().strip()
+        
+
+    for trade in data['data']['Solana']['DEXTrades']:
+        print(trade['Trade']['Buy']['Currency']['Name'])
+        # print(trade['Trade']['Buy']['Currency']['MintAddress'])
+        mint_address = trade['Trade']['Buy']['Currency']['MintAddress']
+        final_query = query2.replace('$ADDRESS', '"' + mint_address + '"')
+        print(run_query(final_query, variables, api_key))
+        print('========================')
+        
+    # print(output)
